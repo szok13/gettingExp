@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     private Integer correctAnswer = 0;
     private int score = 0;
     private boolean questionModeIsOn = true;
-    private boolean buttonsAreOn = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +73,11 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * handle clicking an answer
+     *
      * @param view
      */
     public void answerQuestion(View view) {
-        toggleButtonsEnability();
+        setButtonsEnability(false);
         boolean correct = checkAnswer(view);
         TextView answerInfo = (TextView) findViewById(R.id.answerInfo);
         answerInfo.setVisibility(View.VISIBLE);
@@ -95,20 +95,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * disables and enables answers buttons
+     *  disables and enables answers buttons
+     * @param enableButtons
      */
-    private void toggleButtonsEnability() {
-        for (int i = 1; i <=4; i++) {
+    private void setButtonsEnability(boolean enableButtons) {
+        System.out.println(enableButtons);
+
+        for (int i = 1; i <= 4; i++) {
             int buttonResource = getResources().getIdentifier("answer" + i, "id", getPackageName());
             Button button = (Button) findViewById(buttonResource);
-            button.setEnabled(!buttonsAreOn);
+            button.setEnabled(enableButtons);
         }
-        buttonsAreOn = !buttonsAreOn;
     }
-
 
     /**
      * checks if answer is correct
+     *
      * @param view
      * @return
      */
@@ -125,9 +127,11 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * sets up next question or quiz summary
+     *
      * @param view
      */
     public void nextQuestion(View view) {
+        setButtonsEnability(true);
         ImageView imageView = (ImageView) findViewById(R.id.questionImage);
         imageView.setImageResource(0);
         if (currentQuestionIndex == questions.size()) {
@@ -139,11 +143,11 @@ public class MainActivity extends AppCompatActivity {
             answerInfo.setVisibility(View.INVISIBLE);
             toggleQuestion();
         }
-        toggleButtonsEnability();
     }
 
     /**
      * shows score in summary and hides in questions
+     *
      * @param visibility
      */
     private void toggleScoreVisibility(int visibility) {
@@ -155,16 +159,16 @@ public class MainActivity extends AppCompatActivity {
     /**
      * toggles visibility of NextQuestion button, PlayAgain button and ImageView between question mode and quiz summary
      */
-    private void toggleNextQuestionAndPlayAgainButtonAndImageViewVisibility(){
+    private void toggleNextQuestionAndPlayAgainButtonAndImageViewVisibility() {
         Button playAgainButton = (Button) findViewById(R.id.playAgainButton);
         Button nextQuestionButton = (Button) findViewById(R.id.nextQuestionButton);
         ImageView imageView = (ImageView) findViewById(R.id.questionImage);
-        if(questionModeIsOn){
+        if (questionModeIsOn) {
             playAgainButton.setVisibility(View.VISIBLE);
             nextQuestionButton.setVisibility(View.GONE);
             imageView.setVisibility(View.GONE);
             questionModeIsOn = false;
-        } else{
+        } else {
             playAgainButton.setVisibility(View.GONE);
             nextQuestionButton.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.VISIBLE);
@@ -183,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * changes AnswerInfo button visibility
+     *
      * @param visibility
      */
     private void toggleAnswerInfoVisibility(int visibility) {
@@ -193,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * changes Answer buttons visibility
+     *
      * @param visibility
      */
     private void toggleAnswerButtonsVisibility(int visibility) {
@@ -206,18 +212,20 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * changes question content visibility
+     *
      * @param visibility
      */
-    private void toggleQuestionVisibility(int visibility){
+    private void toggleQuestionVisibility(int visibility) {
         TextView questionContent = (TextView) findViewById(R.id.questionContent);
         questionContent.setVisibility(visibility);
     }
 
     /**
      * resets variables values and views visibilities for new game
+     *
      * @param view
      */
-    public void playAgain(View view){
+    public void playAgain(View view) {
         resetQuiz();
         initializeQuiz();
         toggleAnswerButtonsVisibility(View.VISIBLE);
